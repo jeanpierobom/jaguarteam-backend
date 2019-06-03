@@ -37,9 +37,9 @@ CREATE TABLE `city` (
 );
 
 CREATE TABLE `favorite_teacher` (
+	`id` INT NOT NULL AUTO_INCREMENT,
 	`student_id` INT NOT NULL,
 	`teacher_id` INT NOT NULL,
-	`id` INT NOT NULL AUTO_INCREMENT,
 	PRIMARY KEY (`id`)
 );
 
