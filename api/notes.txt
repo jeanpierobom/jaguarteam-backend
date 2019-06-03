@@ -1,0 +1,3 @@
+Test methods locally:
+    serverless invoke local --function listTeacher
+    serverless invoke local --function createClass --path mocks/createClass-event.json
