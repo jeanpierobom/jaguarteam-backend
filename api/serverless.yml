@@ -1,5 +1,5 @@
 # NOTE: update this with your service name
-service: api
+service: outcom-api
 
 # Use the serverless-webpack plugin to transpile ES6
 plugins:
@@ -34,20 +34,55 @@ provider:
   #     Resource: "arn:aws:dynamodb:us-east-1:*:*"
 
 functions:
+  # Tag: Student
+  studentUploadImage:
+    handler: studentUploadImage.main
+    events:
+      - http:
+          path: student/{id}/uploadImage
+          method: post
+          cors: true
+          # authorizer: aws_iam
+  createStudent:
+    handler: createStudent.main
+    events:
+      - http:
+          path: student
+          method: post
+          cors: true
+          # authorizer: aws_iam
+  getStudentById:
+    handler: getStudentById.main
+    events:
+      - http:
+          path: student/{id}
+          method: get
+          cors: true
+          #authorizer: aws_iam                  
+  updateStudent:
+    handler: updateStudent.main
+    events:
+      - http:
+          path: student
+          method: put
+          cors: true
+          # authorizer: aws_iam
+
+  # Tag: Teacher
+  getTeacherById:
+    handler: getTeacherById.main
+    events:
+      - http:
+          path: teacher/{id}
+          method: get
+          cors: true
+          #authorizer: aws_iam  
   # Defines an HTTP API endpoint that calls the main function in create.js
   # - path: url path is /class
   # - method: POST request
   # - cors: enabled CORS (Cross-Origin Resource Sharing) for browser cross
   #     domain api call
   # - authorizer: authenticate using the AWS IAM role
-  createClass:
-    handler: createClass.main
-    events:
-      - http:
-          path: class
-          method: post
-          cors: true
-          # authorizer: aws_iam
   listTeacher:
     # Defines an HTTP API endpoint that calls the main function in list.js
     # - path: url path is /teacher
@@ -59,6 +94,32 @@ functions:
           method: get
           cors: true
           #authorizer: aws_iam
+
+  # Tag: Class
+  createClass:
+    handler: createClass.main
+    events:
+      - http:
+          path: class
+          method: post
+          cors: true
+          # authorizer: aws_iam
+  getClassById:
+    handler: getClassById.main
+    events:
+      - http:
+          path: class/{id}
+          method: get
+          cors: true
+          #authorizer: aws_iam            
+  updateClass:
+    handler: updateClass.main
+    events:
+      - http:
+          path: class
+          method: put
+          cors: true
+          # authorizer: aws_iam          
 # Create our resources with separate CloudFormation templates
 resources:
   # API Gateway Errors

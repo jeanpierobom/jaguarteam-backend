@@ -1,5 +1,6 @@
 // import uuid from "uuid";
 // import AWS from "aws-sdk";
+import headers from './util/headers';
 
 //const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
@@ -53,31 +54,32 @@ export function main(event, context, callback) {
 //     callback(null, response);
 //   });
 
-    const headers = {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Credentials": true
-    };
+    // //TODO define this constant in another file and import it
+    // const headers = {
+    //   "Access-Control-Allow-Origin": "*",
+    //   "Access-Control-Allow-Credentials": true
+    // };
 
-    // Return status code 200 and the newly created item
-    const Item = {
-        id: data.id,
-        studentId: data.studentId,
-        teacherId: data.teacherId,
-        date: data.date,
-        duration: data.duration,
-        classType: data.classType,
-        location: data.location,
-        price: data.price,
-        classCompleted: data.classCompleted,
-        ratingToTeacher: data.ratingToTeacher,
-        ratingToStudent: data.ratingToStudent,
-        reviewToTeacher: data.reviewToTeacher,
-        reviewToStudent: data.reviewToStudent
-    }
-    const response = {
-        statusCode: 200,
-        headers: headers,
-        body: JSON.stringify(Item)
-    };
-    callback(null, response);  
+  // Return status code 200 and the newly created item
+  const Item = {
+    id: data.id,
+    studentId: data.studentId,
+    teacherId: data.teacherId,
+    date: data.date,
+    duration: data.duration,
+    classType: data.classType,
+    location: data.location,
+    price: data.price,
+    classCompleted: data.classCompleted,
+    ratingToTeacher: data.ratingToTeacher,
+    ratingToStudent: data.ratingToStudent,
+    reviewToTeacher: data.reviewToTeacher,
+    reviewToStudent: data.reviewToStudent
+  }
+  const response = {
+    statusCode: 200,
+    headers: headers,
+    body: JSON.stringify(Item)
+  };
+  callback(null, response);  
 }
