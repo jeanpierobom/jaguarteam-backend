@@ -18,7 +18,17 @@ provider:
   runtime: nodejs8.10
   stage: prod
   region: us-east-1
-
+  # vpc:
+  #   securityGroupIds:
+  #     - sg-0c5fad3fa58d44208
+  #   subnetIds:
+  #     - subnet-9bba64b7
+  # iamRoleStatements:
+  #   - Effect: Allow
+  #     Action:
+  #       - "ec2:CreateNetworkInterface"
+  #     Resource: "*"
+  timeout: 20
   # 'iamRoleStatements' defines the permission policy for the Lambda function.
   # In this case Lambda functions are granted with permissions to access DynamoDB.
   # iamRoleStatements:
