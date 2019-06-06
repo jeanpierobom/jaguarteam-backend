@@ -59,7 +59,7 @@ CREATE TABLE `teacher_language` (
 CREATE TABLE `class_type` (
 	`id` INT NOT NULL AUTO_INCREMENT,
 	`name` varchar(50) NOT NULL,
-	`desc` varchar(255) NOT NULL,
+	`description` varchar(255) NOT NULL,
 	`teacher_id` INT NOT NULL,
 	PRIMARY KEY (`id`)
 );
@@ -115,4 +115,3 @@ ALTER TABLE `message` ADD CONSTRAINT `message_fk0` FOREIGN KEY (`sender_id`) REF
 ALTER TABLE `message` ADD CONSTRAINT `message_fk1` FOREIGN KEY (`receiver_id`) REFERENCES `user`(`id`);
 
 ALTER TABLE `teacher_availability` ADD CONSTRAINT `teacher_availability_fk0` FOREIGN KEY (`teacher_id`) REFERENCES `user`(`id`);
-

@@ -28,7 +28,7 @@ provider:
   #     Action:
   #       - "ec2:CreateNetworkInterface"
   #     Resource: "*"
-  timeout: 20
+  timeout: 6
   # 'iamRoleStatements' defines the permission policy for the Lambda function.
   # In this case Lambda functions are granted with permissions to access DynamoDB.
   # iamRoleStatements:
@@ -44,6 +44,36 @@ provider:
   #     Resource: "arn:aws:dynamodb:us-east-1:*:*"
 
 functions:
+  # Tag: City
+  listCity:
+    handler: listCity.main
+    events:
+      - http:
+          path: city
+          method: get
+          cors: true
+          #authorizer: aws_iam
+
+  # Tag: Country
+  listCountry:
+    handler: listCountry.main
+    events:
+      - http:
+          path: country
+          method: get
+          cors: true
+          #authorizer: aws_iam
+
+  # Tag: Language
+  listLanguage:
+    handler: listLanguage.main
+    events:
+      - http:
+          path: language
+          method: get
+          cors: true
+          #authorizer: aws_iam
+
   # Tag: Student
   studentUploadImage:
     handler: studentUploadImage.main

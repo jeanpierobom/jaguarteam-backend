@@ -1,82 +1,46 @@
-// import * as dynamoDbLib from "./libs/dynamodb-lib";
 import { success, failure } from "./libs/response-lib";
-//import mysql from "./util/database";
 const pool = require('./util/database')
 
 export async function main(event, context) {
-//   const params = {
-//     TableName: "notes",
-//     // 'KeyConditionExpression' defines the condition for the query
-//     // - 'userId = :userId': only return items with matching 'userId'
-//     //   partition key
-//     // 'ExpressionAttributeValues' defines the value in the condition
-//     // - ':userId': defines 'userId' to be Identity Pool identity id
-//     //   of the authenticated user
-//     KeyConditionExpression: "userId = :userId",
-//     ExpressionAttributeValues: {
-//       ":userId": event.requestContext.identity.cognitoIdentityId
-//     }
-//   };
-
-	// const teachers = [
-	// 	{
-	// 		email: 'name1@email.com',
-	// 		name: 'Name1',
-	// 		cityId: 1,
-	// 		cityAsString: 'Vancouver',
-	// 		birthDate: '2019-05-31',
-	// 		bio: 'bio text',
-	// 		motherCountryId: 1,
-	// 		motherCountryAsString: 'Canada',
-	// 		price: 15,
-	// 		languages: [
-	// 			"string"
-	// 		],
-	// 		classTypes: [
-	// 			{ "id": 1, "name": "Hiking at Grouse Mountain" },
-	// 			{ "id": 2, "name": "Groceries" },
-	// 			{ "id": 3, "name": "Visit Canada Place" },
-	// 		]
-	// 	},
-	// 	{
-	// 		email: 'name2@email.com',
-	// 		name: 'Name2',
-	// 		cityId: 1,
-	// 		cityAsString: 'Vancouver',
-	// 		birthDate: '2019-05-31',
-	// 		bio: 'bio text',
-	// 		motherCountryId: 1,
-	// 		motherCountryAsString: 'Canada',
-	// 		price: 15,
-	// 		languages: [
-	// 			"string"
-	// 		],
-	// 		classTypes: [
-	// 			{ "id": 1, "name": "Meeting at a Cafe" },
-	// 			{ "id": 2, "name": "Visit a bank" },
-	// 			{ "id": 3, "name": "Visit Science Center" },
-	// 		]
-	// 	}
-	// ]
-
   try {
-		// Run your query
-		console.log('Starting execution, new method')
-		const results = await pool.query('SELECT * FROM user WHERE user_type = "T"')
-		console.log('Connected')
-		// Run clean up function
-		//await mysql.end()
-	
-		// Return the results
-		// return results
-	
-		//const result = await dynamoDbLib.call("query", params);
-    // Return the matching list of items in response body
+		// Define query
+		const SQL = `
+		SELECT 
+			user.id, user.email, user.name,
+			user.city_id AS cityId, city.name as cityAsString,
+			user.birth_date AS birthDate, user.bio,
+			user.mother_country_id AS motherCountryId, country.name as motherCountryName,
+			(SELECT GROUP_CONCAT(language.name)
+				FROM language, teacher_language
+				WHERE teacher_language.language_id = language.id
+				AND teacher_language.teacher_id = user.id) AS languages,
+			(SELECT
+				CONCAT(
+					'[',
+					GROUP_CONCAT(
+						JSON_OBJECT(
+							'id', class_type.id,
+							'name', class_type.name,
+							'description', class_type.description
+						)
+					),
+				']')
+			FROM class_type
+			WHERE class_type.teacher_id = user.id) AS classTypes
+		FROM user
+		LEFT JOIN city ON city.id = user.city_id
+		LEFT JOIN country ON country.id = user.mother_country_id
+		WHERE user_type = "T"`;
+
+		// Run query
+		const results = await pool.query(SQL)
+
+    // Return results in response body
     return success(results);
   } catch (e) {
-		console.log('There was an error')
-		console.log(e);
-		console.log(e.message);
+		console.log('There was an error: ' + e)
     return failure({ status: false, message: e.message });
   }
 }
+
+//(SELECT GROUP_CONCAT(CONCAT('{', id, ',''', class_type.name, ''',''', class_type.description, '''}'))
