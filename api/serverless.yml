@@ -109,6 +109,14 @@ functions:
           # authorizer: aws_iam
 
   # Tag: Teacher
+  createTeacher:
+    handler: createTeacher.main
+    events:
+      - http:
+          path: teacher
+          method: post
+          cors: true
+          # authorizer: aws_iam
   getTeacherById:
     handler: getTeacherById.main
     events:
@@ -117,6 +125,14 @@ functions:
           method: get
           cors: true
           #authorizer: aws_iam  
+  updateTeacher:
+    handler: updateTeacher.main
+    events:
+      - http:
+          path: teacher
+          method: put
+          cors: true
+          # authorizer: aws_iam
   # Defines an HTTP API endpoint that calls the main function in create.js
   # - path: url path is /class
   # - method: POST request
@@ -134,6 +150,10 @@ functions:
           method: get
           cors: true
           #authorizer: aws_iam
+          request:
+            parameters:
+              querystrings:
+                url: true
 
   # Tag: Class
   createClass:

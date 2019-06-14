@@ -8,6 +8,7 @@ CREATE TABLE `user` (
 	`birth_date` DATE,
 	`bio` TEXT,
 	`mother_country_id` INT,
+	`user_type` char NULL DEFAULT 'S',
 	`teacher_price` FLOAT,
 	PRIMARY KEY (`id`)
 );
@@ -77,8 +78,8 @@ CREATE TABLE `teacher_availability` (
 	`id` INT NOT NULL AUTO_INCREMENT,
 	`teacher_id` INT NOT NULL,
 	`day_of_week` INT NOT NULL,
-	`begin` TIME NOT NULL,
-	`end` TIME NOT NULL,
+	`begin` VARCHAR(8) NOT NULL,
+	`end` VARCHAR(8) NOT NULL,
 	PRIMARY KEY (`id`)
 );
 
