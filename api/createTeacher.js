@@ -1,18 +1,19 @@
 import { success, failure } from "./libs/response-lib";
-import headers from './util/headers';
 const dao = require('./dao/dao')
 
 export async function main(event, context, callback) {
-  console.log('createTeacher')
+  console.log('Executing createTeacher')
+
+  // Validates if the payload was provided or not
   console.log(`event.body: ${event.body}`)
   if (!event.body) {
-    return failure({ status: false, message: 'POST data expected' });
+    return failure({ status: false, message: 'POST data expected' })
   }
 
   // Request body is passed in as a JSON encoded string in 'event.body'
   const data = JSON.parse(event.body);
 
-  // Return status code 200 and the newly created item
+  // Creates the object to be saved
   const item = {
     email: data.email,
     password: data.password,
@@ -26,23 +27,32 @@ export async function main(event, context, callback) {
     teacherPrice: data.teacherPrice
   }
 
-  console.log(`item: ${JSON.stringify(item)}`);
-
   try {
+    // Saves the object
+    console.log(`item: ${item}`)
     const results = await dao.createTeacher(item)
-    console.log(`results: ${JSON.stringify(results)}`);
-    return success(results);
+    console.log(`results: ${JSON.stringify(results)}`)
+
+    // Store the ID of the object
+    console.log(`results.insertId: ${JSON.stringify(results.insertId)}`)
+    const id = results.insertId
+    console.log(`id: ${id}`)
+
+    // Return status code 200
+    // Return the object that was saved
+    if (id) {
+      const teacher = await dao.getTeacher(id)
+      console.log(`teacher: ${JSON.stringify(teacher)}`)
+      return success(teacher)
+    }
+    
+    // Or return results from database
+    return success(results)
+    
   } catch(error) {
+    // Return status code 500
     console.log(error)
-    return failure({ status: false, message: error });
+    return failure({ status: false, message: error })
   }
 
-
-  // Return status code 200 and the newly created item
-  // const response = {
-  //   statusCode: 200,
-  //   headers: headers,
-  //   body: JSON.stringify(result)
-  // };
-  // callback(null, response);  
 }

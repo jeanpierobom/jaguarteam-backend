@@ -9,6 +9,7 @@ const dbconfig = {
 	password: config.password,
 	database: config.database,
 	connectionLimit: config.connectionLimit,
+	timezone: -7000
 };
 
 const pool = mysql.createPool(dbconfig);

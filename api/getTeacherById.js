@@ -1,31 +1,33 @@
 import { success, failure } from "./libs/response-lib";
+const dao = require('./dao/dao')
 
 export async function main(event, context) {
+	console.log('Executing getTeacherById')
 
-	const teacher = {
-		id: 1,
-		email: 'name1@email.com',
-		name: 'Name1',
-		cityId: 1,
-		cityAsString: 'Vancouver',
-		birthDate: '2019-05-31',
-		bio: 'bio text',
-		motherCountryId: 1,
-		motherCountryAsString: 'Canada',
-		languages: [
-			"string"
-		],
-		classTypes: [
-			{ "id": 1, "name": "Hiking at Grouse Mountain" },
-			{ "id": 2, "name": "Groceries" },
-			{ "id": 3, "name": "Visit Canada Place" },
-		]
-	};
+	try {
+		// Obtain parameters
+		let id
+		const data = event.queryStringParameters
+		if (data) {
+			id = data.id
+		} else {
+			return failure({ status: false, message: 'ID not provided' })
+		}
 
-  try {
-    return success(teacher);
-  } catch (e) {
-    return failure({ status: false });
-  }
-	
+		// Retrieves the teacher
+		const results = await dao.getTeacher(id)
+		if (!results) {
+			return failure({ status: false, message: `Teacher not found with ID ${id}` })
+		}
+
+		// Return status code 200
+		console.log(`results: ${JSON.stringify(results)}`)
+		return success(results)
+
+	} catch(error) {
+		// Return status code 500
+		console.log(error)
+		return failure({ status: false, message: error })
+	}
+
 }

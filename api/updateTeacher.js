@@ -1,18 +1,22 @@
 import { success, failure } from "./libs/response-lib";
-import headers from './util/headers';
 const dao = require('./dao/dao')
 
 export async function main(event, context, callback) {
-  console.log('createTeacher')
-  console.log(`event.body: ${event.body}`)
+  console.log('Executing updateTeacher')
   if (!event.body) {
     return failure({ status: false, message: 'POST data expected' });
   }
 
+  // Validates if the payload was provided or not
+  console.log(`event.body: ${event.body}`)
+  if (!event.body) {
+    return failure({ status: false, message: 'PUT data expected' })
+  }
+  
   // Request body is passed in as a JSON encoded string in 'event.body'
   const data = JSON.parse(event.body);
 
-  // Return status code 200 and the newly created item
+  // Creates the object to be saved
   const item = {
     id: data.id,
     cityId: data.cityId,
@@ -25,10 +29,22 @@ export async function main(event, context, callback) {
   }
 
   try {
+    // Saves the object
+    console.log(`item: ${item}`)
     const results = await dao.updateTeacher(item)
     console.log(`results: ${JSON.stringify(results)}`);
-    return success(results);
+
+    // Return status code 200
+    if (results.affectedRows === 1) {
+      const teacher = await dao.getTeacher(item.id)
+      console.log(`teacher: ${JSON.stringify(teacher)}`)
+      return success(teacher)
+    } else {
+      return success(results);
+    }
+    
   } catch(error) {
+    // Return status code 500
     console.log(error)
     return failure({ status: false, message: error });
   }

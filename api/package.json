@@ -27,6 +27,7 @@
     "webpack-node-externals": "^1.6.0"
   },
   "dependencies": {
+    "@hapi/joi": "^15.0.3",
     "babel-runtime": "^6.26.0",
     "promise-mysql": "^3.3.2",
     "serverless-mysql": "^1.4.0",

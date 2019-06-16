@@ -1,23 +1,21 @@
 import { success, failure } from "./libs/response-lib";
-const pool = require('./util/database')
+const dao = require('./dao/dao')
 
 export async function main(event, context) {
-  try {
-		// Define query
-		const SQL = `
-		SELECT 
-			city.id, city.name,
-			city.country_id AS countryId, country.name as countryName
-		FROM city
-		LEFT JOIN country ON country.id = city.country_id
-		ORDER BY city.name, country.name`;
+	console.log('Executing listCity')
 
-		// Run query
-		const results = await pool.query(SQL)
-    // Return results in response body
-    return success(results);
-  } catch (e) {
-		console.log('There was an error: ' + e)
-    return failure({ status: false, message: e.message });
-  }
+		try {
+			// Retrieves a list of cities
+			const results = await dao.listCity()
+	
+			// Return status code 200
+			console.log(`results: ${JSON.stringify(results)}`)
+			return success(results)
+
+	} catch(error) {
+			// Return status code 500
+			console.log(error)
+			return failure({ status: false, message: error });
+		}		
+
 }

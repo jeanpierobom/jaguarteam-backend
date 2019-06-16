@@ -23,8 +23,8 @@ CREATE TABLE `class` (
 	`location` varchar(255),
 	`price` FLOAT NOT NULL,
 	`class_completed` bool NOT NULL,
-	`rating_to_student` tinyint,
-	`rating_to_teacher` tinyint,
+	`rating_to_student` FLOAT,
+	`rating_to_teacher` FLOAT,
 	`review_to_teacher` TEXT,
 	`review_to_student` TEXT,
 	PRIMARY KEY (`id`)
