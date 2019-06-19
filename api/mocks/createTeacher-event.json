@@ -1,0 +1,4 @@
+{
+  "body": 
+    "{\"email\":\"email@email.com\",\"password\":\"pwd\",\"name\":\"Jean Teacher\",\"cityId\":\"1\",\"birthDate\":\"1999-01-01\",\"bio\":\"Bio text here...\",\"motherCountryId\":\"1\",\"teacherType\":\"C\",\"teacherPrice\":\"15.5\"}"
+}

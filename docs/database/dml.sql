@@ -66,4 +66,19 @@ INSERT INTO class
 rating_to_student, rating_to_teacher, review_to_teacher, review_to_student)
 VALUES (1, 4, now(), '01:00', 2, 'Wall Mart', 15, true, 5, 5, 'Amazing', 'Excellent');
 
+INSERT INTO class
+(student_id, teacher_id, date, duration, class_type_id, location, price, class_completed,
+rating_to_student, rating_to_teacher, review_to_teacher, review_to_student)
+VALUES (1, 13, now(), '01:00', 2, 'Wall Mart', 15, true, 5, 5, 'Amazing', 'Excellent');
+
+INSERT INTO class
+(student_id, teacher_id, date, duration, class_type_id, location, price, class_completed,
+rating_to_student, rating_to_teacher, review_to_teacher, review_to_student)
+VALUES (1, 13, now(), '01:00', 2, 'Wall Mart', 15, true, 5, 2, 'Amazing', 'Excellent');
+
+INSERT INTO class
+(student_id, teacher_id, date, duration, class_type_id, location, price, class_completed,
+rating_to_student, rating_to_teacher, review_to_teacher, review_to_student)
+VALUES (2, 9, now(), '01:00', 2, 'Wall Mart', 15, true, 5, 5, 'Amazing', 'Excellent');
+
 SELECT AVG(rating_to_teacher) AS average_rating_to_teacher FROM class WHERE teacher_id = 4 AND class_completed;

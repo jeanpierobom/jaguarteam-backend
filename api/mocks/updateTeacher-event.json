@@ -1,0 +1,4 @@
+{
+  "body": 
+    "{\"id\":\"13\",\"cityId\":\"1\",\"birthDate\":\"1999-01-01\",\"bio\":\"Bio text here...\",\"motherCountryId\":\"1\",\"teacherType\":\"C\",\"teacherPrice\":\"16.5\",\"availability\": [{ \"dayOfWeek\":\"1\", \"timeStart\":\"08:00 AM\", \"timeEnd\":\"09:00 AM\" },{ \"dayOfWeek\":\"1\", \"timeStart\":\"03:00 PM\", \"timeEnd\":\"05:00 AM\" }]}"
+}

@@ -1,4 +1,5 @@
 import { success, failure } from "./libs/response-lib";
+const Joi = require('@hapi/joi');
 const dao = require('./dao/dao')
 
 export async function main(event, context, callback) {
@@ -27,6 +28,27 @@ export async function main(event, context, callback) {
     teacherPrice: data.teacherPrice
   }
 
+  // // Create the validation schema
+  // const schema = Joi.object().keys({
+  //   email: Joi.string().email({ minDomainSegments: 2 }).required(),
+  //   password: Joi.string().min(3).max(255).required(),
+  //   userType: Joi.string().min(1).max(1),
+  //   name: Joi.string().min(3).max(255).required(),
+  //   cityId: Joi.number().integer().min(1),
+  //   birthDate: Joi.date().iso(),
+  //   bio: Joi.string(),
+  //   motherCountryId: Joi.number().integer().min(1),
+  //   teacherType: Joi.string().min(1).max(1),
+  //   teacherPrice: Joi.number()
+  // });
+
+  // // Validate
+  // const validationResult = Joi.validate(item, schema);
+  // console.log(`validationResult: ${JSON.stringify(validationResult)}`)
+  // if (validationResult && validationResult.error) {
+  //   return failure({ status: false, message: validationResult.error.details })
+  // }
+
   try {
     // Saves the object
     console.log(`item: ${item}`)
@@ -42,6 +64,13 @@ export async function main(event, context, callback) {
     // Return the object that was saved
     if (id) {
       const teacher = await dao.getTeacher(id)
+
+      // Retrieves the teacher availability
+			const availability = await dao.getTeacherAvailability(id)
+			if (availability) {
+				teacher.availability = availability
+			}
+
       console.log(`teacher: ${JSON.stringify(teacher)}`)
       return success(teacher)
     }
