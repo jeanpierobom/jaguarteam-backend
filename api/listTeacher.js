@@ -14,8 +14,14 @@ export async function main(event, context) {
 			date = data.date
 		}
 
-		// Retrieves a list of language
+		// Retrieves a list of teacher
 		const results = await dao.listTeacher(cityId, languageId, date)
+
+		if (results) {
+      for (let r of results) {
+        r.classTypes = await dao.getTeacherClassTypes(r.id)
+      }
+    }
 
 		// Return status code 200
 		console.log(`results: ${JSON.stringify(results)}`)

@@ -54,6 +54,16 @@ functions:
           cors: true
           #authorizer: aws_iam
 
+  # Tag: Class Type
+  listClassType:
+    handler: listClassType.main
+    events:
+      - http:
+          path: classType
+          method: get
+          cors: true
+          #authorizer: aws_iam
+
   # Tag: Country
   listCountry:
     handler: listCountry.main
@@ -98,7 +108,19 @@ functions:
           path: student/{id}
           method: get
           cors: true
-          #authorizer: aws_iam                  
+          #authorizer: aws_iam
+  listStudent:
+    handler: listStudent.main
+    events:
+      - http:
+          path: student
+          method: get
+          cors: true
+          #authorizer: aws_iam
+          request:
+            parameters:
+              querystrings:
+                url: true
   updateStudent:
     handler: updateStudent.main
     events:
@@ -179,7 +201,34 @@ functions:
           path: class
           method: put
           cors: true
-          # authorizer: aws_iam          
+          # authorizer: aws_iam
+
+  # Tag: User
+  createUser:
+    handler: createUser.main
+    events:
+      - http:
+          path: user
+          method: post
+          cors: true
+          # authorizer: aws_iam
+  getUserById:
+    handler: getUserById.main
+    events:
+      - http:
+          path: user/{id}
+          method: get
+          cors: true
+          #authorizer: aws_iam 
+  updateUser:
+    handler: updateUser.main
+    events:
+      - http:
+          path: user
+          method: put
+          cors: true
+          # authorizer: aws_iam
+
 # Create our resources with separate CloudFormation templates
 resources:
   # API Gateway Errors

@@ -3,7 +3,7 @@ const Joi = require('@hapi/joi');
 const dao = require('./dao/dao')
 
 export async function main(event, context, callback) {
-  console.log('Executing updateTeacher')
+  console.log('Executing updateUser')
   if (!event.body) {
     return failure({ status: false, message: 'POST data expected' });
   }
@@ -20,14 +20,11 @@ export async function main(event, context, callback) {
   // Creates the object to be saved
   const item = {
     id: data.id,
+    userType: data.userType,
     cityId: data.cityId,
     birthDate: data.birthDate,
     bio: data.bio,
-    motherCountryId: data.motherCountryId,
-    teacherType: data.teacherType,
-    teacherPrice: data.teacherPrice,
-    availability: data.availability,
-    classTypes: data.classTypes
+    motherCountryId: data.motherCountryId
   }
 
   // // Create the validation schema
@@ -36,14 +33,7 @@ export async function main(event, context, callback) {
   //   cityId: Joi.number().integer().min(1),
   //   birthDate: Joi.date().iso(),
   //   bio: Joi.string(),
-  //   motherCountryId: Joi.number().integer().min(1),
-  //   teacherType: Joi.string().min(1).max(1),
-  //   teacherPrice: Joi.number(),
-  //   availability: Joi.array().items({
-  //     dayOfWeek: Joi.number().integer().min(1).max(7),
-  //     timeStart: Joi.string().min(8).max(8),
-  //     timeEnd: Joi.string().min(8).max(8)
-  //   })
+  //   motherCountryId: Joi.number().integer().min(1)
   // });
 
   // // Validate
@@ -56,39 +46,14 @@ export async function main(event, context, callback) {
   try {
     // Saves the object
     console.log(`item: ${item}`)
-    const results = await dao.updateTeacher(item)
+    const results = await dao.updateUser(item)
     console.log(`results: ${JSON.stringify(results)}`);
 
     // Return status code 200
     if (results.affectedRows === 1) {
-      const teacher = await dao.getTeacher(item.id)
-
-			// Retrieves the teacher languages
-			const languages = await dao.getTeacherLanguages(item.id)
-			if (languages) {
-				teacher.languages = languages
-			}
-
-			// Retrieves the teacher class types
-			const classTypes = await dao.getTeacherClassTypes(item.id)
-			if (classTypes) {
-				teacher.classTypes = classTypes
-			}
-			
-			// Retrieves the teacher availability
-			const availability = await dao.getTeacherAvailability(item.id)
-			if (availability) {
-				teacher.availability = availability
-			}
-
-			// Retrieves the teacher ratings
-			const ratings = await dao.getTeacherRatings(item.id)
-			if (ratings) {
-				teacher.ratings = ratings
-			}
-
-      console.log(`teacher: ${JSON.stringify(teacher)}`)
-      return success(teacher)
+      const user = await dao.getUser(item.id)
+      console.log(`user: ${JSON.stringify(user)}`)
+      return success(user)
     } else {
       return success(results);
     }

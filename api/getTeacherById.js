@@ -17,11 +17,31 @@ export async function main(event, context) {
 		if (!results) {
 			return failure({ status: false, message: `Teacher not found with ID ${id}` })
 		} else {
+
+			// Retrieves the teacher languages
+			const languages = await dao.getTeacherLanguages(id)
+			if (languages) {
+				results.languages = languages
+			}
+
+			// Retrieves the teacher class types
+			const classTypes = await dao.getTeacherClassTypes(id)
+			if (classTypes) {
+				results.classTypes = classTypes
+			}
+			
 			// Retrieves the teacher availability
 			const availability = await dao.getTeacherAvailability(id)
 			if (availability) {
 				results.availability = availability
 			}
+
+			// Retrieves the teacher ratings
+			const ratings = await dao.getTeacherRatings(id)
+			if (ratings) {
+				results.ratings = ratings
+			}
+
 		}
 
 		// Return status code 200
