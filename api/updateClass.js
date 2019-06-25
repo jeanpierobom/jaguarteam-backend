@@ -1,31 +1,65 @@
-import headers from './util/headers';
+import { success, failure } from "./libs/response-lib";
+const Joi = require('@hapi/joi');
+const dao = require('./dao/dao')
 
-export function main(event, context, callback) {
+export async function main(event, context, callback) {
+  console.log('Executing updateClass')
+  if (!event.body) {
+    return failure({ status: false, message: 'POST data expected' });
+  }
+
+  // Validates if the payload was provided or not
+  console.log(`event.body: ${event.body}`)
+  if (!event.body) {
+    return failure({ status: false, message: 'PUT data expected' })
+  }
+  
   // Request body is passed in as a JSON encoded string in 'event.body'
   const data = JSON.parse(event.body);
 
-  // Return status code 200 and the newly created item
-  const Item = {
+  // Creates the object to be saved
+  const item = {
     id: data.id,
-    studentId: data.studentId,
-    teacherId: data.teacherId,
-    date: data.date,
-    duration: data.duration,
-    classType: data.classType,
     location: data.location,
-    price: data.price,
-    classCompleted: data.classCompleted,
-    ratingToTeacher: data.ratingToTeacher,
-    ratingToStudent: data.ratingToStudent,
-    reviewToTeacher: data.reviewToTeacher,
-    reviewToStudent: data.reviewToStudent
+    locationLat: data.locationLat,
+    locationLong: data.locationLong
   }
 
-  const response = {
-    statusCode: 200,
-    headers: headers,
-    body: JSON.stringify(Item)
-  };
+  // Create the validation schema
+  const schema = Joi.object().keys({
+    id: Joi.number().integer().min(1).required(),
+    location: Joi.string().max(255),
+    locationLat: Joi.string().max(30),
+    locationLong: Joi.string().max(30)
+  });
 
-  callback(null, response);  
+  // Validate
+  const validationResult = Joi.validate(item, schema);
+  console.log(`validationResult: ${JSON.stringify(validationResult)}`)
+  if (validationResult && validationResult.error) {
+    return failure({ status: false, message: validationResult.error.details })
+  }
+  
+  try {
+    // Saves the object
+    console.log(`item: ${item}`)
+    const results = await dao.updateClass(item)
+    console.log(`results: ${JSON.stringify(results)}`);
+
+    // Return status code 200
+    if (results.affectedRows === 1) {
+      const klass = await dao.getClass(item.id)
+
+      console.log(`klass: ${JSON.stringify(klass)}`)
+      return success(klass)
+    } else {
+      return success(results);
+    }
+    
+  } catch(error) {
+    // Return status code 500
+    console.log(error)
+    return failure({ status: false, message: error });
+  }
+
 }

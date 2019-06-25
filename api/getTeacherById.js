@@ -19,10 +19,10 @@ export async function main(event, context) {
 		} else {
 
 			// Retrieves the teacher languages
-			const languages = await dao.getTeacherLanguages(id)
-			if (languages) {
-				results.languages = languages
-			}
+			// const languages = await dao.getTeacherLanguages(id)
+			// if (languages) {
+			// 	results.languages = languages
+			// }
 
 			// Retrieves the teacher class types
 			const classTypes = await dao.getTeacherClassTypes(id)
@@ -30,16 +30,16 @@ export async function main(event, context) {
 				results.classTypes = classTypes
 			}
 			
-			// Retrieves the teacher availability
-			const availability = await dao.getTeacherAvailability(id)
-			if (availability) {
-				results.availability = availability
-			}
-
 			// Retrieves the teacher ratings
 			const ratings = await dao.getTeacherRatings(id)
 			if (ratings) {
 				results.ratings = ratings
+			}
+
+			// Retrieves the teacher availability
+			const availability = await dao.getTeacherAvailability(id)
+			if (availability) {
+				results.availability = availability
 			}
 
 		}

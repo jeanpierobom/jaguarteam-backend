@@ -1,85 +1,82 @@
-// import uuid from "uuid";
-// import AWS from "aws-sdk";
-import headers from './util/headers';
+import { success, failure } from "./libs/response-lib";
+const Joi = require('@hapi/joi');
+const dao = require('./dao/dao')
 
-//const dynamoDb = new AWS.DynamoDB.DocumentClient();
+export async function main(event, context, callback) {
+  console.log('Executing createClass')
 
-export function main(event, context, callback) {
+  // Validates if the payload was provided or not
+  console.log(`event.body: ${event.body}`)
+  if (!event.body) {
+    return failure({ status: false, message: 'POST data expected' })
+  }
+
   // Request body is passed in as a JSON encoded string in 'event.body'
   const data = JSON.parse(event.body);
 
-//   const params = {
-//     TableName: "notes",
-//     // 'Item' contains the attributes of the item to be created
-//     // - 'userId': user identities are federated through the
-//     //             Cognito Identity Pool, we will use the identity id
-//     //             as the user id of the authenticated user
-//     // - 'noteId': a unique uuid
-//     // - 'content': parsed from request body
-//     // - 'attachment': parsed from request body
-//     // - 'createdAt': current Unix timestamp
-//     Item: {
-//       userId: event.requestContext.identity.cognitoIdentityId,
-//       noteId: uuid.v1(),
-//       content: data.content,
-//       attachment: data.attachment,
-//       createdAt: Date.now()
-//     }
-//   };
-
-//   dynamoDb.put(params, (error, data) => {
-//     // Set response headers to enable CORS (Cross-Origin Resource Sharing)
-//     const headers = {
-//       "Access-Control-Allow-Origin": "*",
-//       "Access-Control-Allow-Credentials": true
-//     };
-
-//     // Return status code 500 on error
-//     if (error) {
-//       const response = {
-//         statusCode: 500,
-//         headers: headers,
-//         body: JSON.stringify({ status: false })
-//       };
-//       callback(null, response);
-//       return;
-//     }
-
-//     // Return status code 200 and the newly created item
-//     const response = {
-//       statusCode: 200,
-//       headers: headers,
-//       body: JSON.stringify(params.Item)
-//     };
-//     callback(null, response);
-//   });
-
-    // //TODO define this constant in another file and import it
-    // const headers = {
-    //   "Access-Control-Allow-Origin": "*",
-    //   "Access-Control-Allow-Credentials": true
-    // };
-
-  // Return status code 200 and the newly created item
-  const Item = {
-    id: data.id,
+  // Creates the object to be saved
+  const item = {
     studentId: data.studentId,
     teacherId: data.teacherId,
     date: data.date,
+    startTime: data.startTime,
     duration: data.duration,
     classType: data.classType,
     location: data.location,
-    price: data.price,
-    classCompleted: data.classCompleted,
-    ratingToTeacher: data.ratingToTeacher,
-    ratingToStudent: data.ratingToStudent,
-    reviewToTeacher: data.reviewToTeacher,
-    reviewToStudent: data.reviewToStudent
+    locationLat: data.locationLat,
+    locationLong: data.locationLong,
+    price: data.price
   }
-  const response = {
-    statusCode: 200,
-    headers: headers,
-    body: JSON.stringify(Item)
-  };
-  callback(null, response);  
+
+  // Create the validation schema
+  const schema = Joi.object().keys({
+    studentId: Joi.number().integer().min(1).required(),
+    teacherId: Joi.number().integer().min(1).required(),
+    date: Joi.date().iso().required(),
+    startTime: Joi.string().min(8).max(8),
+    duration: Joi.string().min(5).max(5).required(),
+    classType: Joi.string().max(50),
+    location: Joi.string().max(255),
+    locationLat: Joi.string().max(30),
+    locationLong: Joi.string().max(30),
+    price: Joi.number()
+  });
+
+  // Validate
+  const validationResult = Joi.validate(item, schema);
+  console.log(`validationResult: ${JSON.stringify(validationResult)}`)
+  if (validationResult && validationResult.error) {
+    return failure({ status: false, message: validationResult.error.details })
+  }
+
+  try {
+    // Saves the object
+    console.log(`item: ${item}`)
+    const results = await dao.createClass(item)
+    console.log(`results: ${JSON.stringify(results)}`)
+
+    // Store the ID of the object
+    console.log(`results.insertId: ${JSON.stringify(results.insertId)}`)
+    const id = results.insertId
+    console.log(`id: ${id}`)
+
+    // Return status code 200
+    // Return the object that was saved
+    if (id) {
+      const klass = await dao.getClass(id)
+
+      console.log(`klass: ${JSON.stringify(klass)}`)
+      return success(klass)
+    }
+    
+    // Or return results from database
+    return success(results)
+    
+  } catch(error) {
+    // Return status code 500
+    console.log(error)
+    return failure({ status: false, message: error })
+  }
+
 }
+

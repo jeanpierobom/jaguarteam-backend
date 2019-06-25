@@ -193,7 +193,15 @@ functions:
           path: class/{id}
           method: get
           cors: true
-          #authorizer: aws_iam            
+          #authorizer: aws_iam
+  listClass:
+    handler: listClass.main
+    events:
+      - http:
+          path: class
+          method: get
+          cors: true
+          #authorizer: aws_iam
   updateClass:
     handler: updateClass.main
     events:

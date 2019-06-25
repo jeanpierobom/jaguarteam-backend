@@ -27,7 +27,8 @@ export async function main(event, context, callback) {
     teacherType: data.teacherType,
     teacherPrice: data.teacherPrice,
     availability: data.availability,
-    classTypes: data.classTypes
+    classTypes: data.classTypes,
+    languages: data.languages
   }
 
   // // Create the validation schema
@@ -43,7 +44,9 @@ export async function main(event, context, callback) {
   //     dayOfWeek: Joi.number().integer().min(1).max(7),
   //     timeStart: Joi.string().min(8).max(8),
   //     timeEnd: Joi.string().min(8).max(8)
-  //   })
+  //   }),
+  //   classTypes: Joi.array().items(Joi.string()),
+  //   languages: Joi.array().items(Joi.integer())
   // });
 
   // // Validate

@@ -1,23 +1,31 @@
 import { success, failure } from "./libs/response-lib";
+const dao = require('./dao/dao')
 
 export async function main(event, context) {
+	console.log('Executing getClassById')
 
-	const student = {
-		id: 1,
-		email: 'name1@email.com',
-		name: 'Name1',
-		cityId: 1,
-		cityAsString: 'Vancouver',
-		birthDate: '2019-05-31',
-		bio: 'bio text',
-		motherCountryId: 1,
-		motherCountryAsString: 'Canada'
-	};
+	try {
+		// Obtain parameters
+		if (!event.pathParameters || !event.pathParameters.id) {
+			return failure({ status: false, message: 'ID not provided' })
+		}
 
-  try {
-    return success(student);
-  } catch (e) {
-    return failure({ status: false });
-  }
-	
+		let id = event.pathParameters.id
+
+		// Retrieves the teacher
+		const results = await dao.getClass(id)
+		if (!results) {
+			return failure({ status: false, message: `Class not found with ID ${id}` })
+		}
+
+		// Return status code 200
+		console.log(`results: ${JSON.stringify(results)}`)
+		return success(results)
+
+	} catch(error) {
+		// Return status code 500
+		console.log(error)
+		return failure({ status: false, message: error })
+	}
+
 }
