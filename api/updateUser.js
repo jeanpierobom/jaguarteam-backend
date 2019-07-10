@@ -27,21 +27,22 @@ export async function main(event, context, callback) {
     motherCountryId: data.motherCountryId
   }
 
-  // // Create the validation schema
-  // const schema = Joi.object().keys({
-  //   id: Joi.number().integer().min(1),
-  //   cityId: Joi.number().integer().min(1),
-  //   birthDate: Joi.date().iso(),
-  //   bio: Joi.string(),
-  //   motherCountryId: Joi.number().integer().min(1)
-  // });
+  // Create the validation schema
+  const schema = Joi.object().keys({
+    id: Joi.number().integer().min(1).required(),
+    userType: Joi.string().min(1).max(1),
+    cityId: Joi.number().integer().min(1),
+    birthDate: Joi.date().iso(),
+    bio: Joi.string(),
+    motherCountryId: Joi.number().integer().min(1)
+  });
 
-  // // Validate
-  // const validationResult = Joi.validate(item, schema);
-  // console.log(`validationResult: ${JSON.stringify(validationResult)}`)
-  // if (validationResult && validationResult.error) {
-  //   return failure({ status: false, message: validationResult.error.details })
-  // }
+  // Validate
+  const validationResult = Joi.validate(item, schema);
+  console.log(`validationResult: ${JSON.stringify(validationResult)}`)
+  if (validationResult && validationResult.error) {
+    return failure({ status: false, message: validationResult.error.details })
+  }
   
   try {
     // Saves the object

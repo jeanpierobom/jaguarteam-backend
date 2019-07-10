@@ -44,6 +44,23 @@ provider:
   #     Resource: "arn:aws:dynamodb:us-east-1:*:*"
 
 functions:
+
+  customAuthorizer:
+    handler: customAuthorizer.handler
+
+  customAuthorizer2:
+    handler: customAuthorizer2.handler
+
+  # Tag: Auth
+  login:
+    handler: login.main
+    events:
+      - http:
+          path: login
+          method: post
+          cors: true
+          # authorizer: aws_iam
+
   # Tag: City
   listCity:
     handler: listCity.main
@@ -83,6 +100,14 @@ functions:
           method: get
           cors: true
           #authorizer: aws_iam
+  listLanguageProtected:
+    handler: listLanguageProtected.main
+    events:
+      - http:
+          path: language_protected
+          method: get
+          cors: true
+          authorizer: customAuthorizer
 
   # Tag: Student
   studentUploadImage:

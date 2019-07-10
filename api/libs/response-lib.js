@@ -6,6 +6,10 @@ export function success(body) {
     return buildResponse(500, body);
   }
   
+  export function forbidden(body) {
+    return buildResponse(401, body);
+  }
+
   function buildResponse(statusCode, body) {
     return {
       statusCode: statusCode,

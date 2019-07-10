@@ -5,6 +5,25 @@ const NUMBER_OF_DAYS_CALENDAR = 5
 class Dao {
 
   /**
+   * Returns a user based on the email and password
+   */
+  async login(email, password) {
+    if (!email || !password) {
+      return null;
+    }
+
+    // Define query
+    let query = `
+    SELECT user.id, user.email, user.name, user.user_type AS userType
+    FROM user
+    WHERE user.email = ? AND user.password = ?`
+
+    const result = await pool.query(query, [email, password])
+    if (result) return result[0]
+    return result
+  }
+
+  /**
    * Retrieves a list of city
    */
   async listCity() {
@@ -25,7 +44,7 @@ class Dao {
   /**
    * Retrieves a list of class
    */
-  async listClass() {
+  async listClass(studentId, teacherId) {
     // Define query
     let query = `
     SELECT
@@ -50,13 +69,26 @@ class Dao {
       class.rating_to_teacher AS ratingToTeacher,
       class.review_to_teacher AS reviewToTeacher,
       class.rating_to_student AS ratingToStudent,
-      class.review_to_student AS reviewToStudent
+      class.review_to_student AS reviewToStudent,
+      class.message
     FROM class
     LEFT JOIN user AS student ON class.student_id = student.id
     LEFT JOIN city AS student_city ON student.city_id = student_city.id
     LEFT JOIN user AS teacher ON class.teacher_id = teacher.id
     LEFT JOIN city AS teacher_city ON teacher.city_id = teacher_city.id
-    ORDER BY class.date DESC, studentName, teacherName`
+    WHERE 1=1 `
+
+    // Filter by student
+		if (studentId) {
+			query += ` AND student_id = ${studentId}`
+		}
+
+    // Filter by teacher
+		if (teacherId) {
+			query += ` AND teacher_id = ${teacherId}`
+		}
+
+    query += ` ORDER BY class.date DESC, studentName, teacherName`
     
     // Executes the query and return results
     const result = await pool.query(query)
@@ -211,7 +243,8 @@ class Dao {
       class.rating_to_teacher AS ratingToTeacher,
       class.review_to_teacher AS reviewToTeacher,
       class.rating_to_student AS ratingToStudent,
-      class.review_to_student AS reviewToStudent
+      class.review_to_student AS reviewToStudent,
+      class.message
     FROM class
     LEFT JOIN user AS student ON class.student_id = student.id
     LEFT JOIN city AS student_city ON student.city_id = student_city.id
@@ -515,9 +548,9 @@ class Dao {
     klass.classCompleted = false
     const query = 
         `INSERT INTO class
-        (student_id, teacher_id, date, start_time, duration, class_type, location, location_lat, location_long, price, class_completed)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-    const params = [klass.studentId, klass.teacherId, klass.date, klass.startTime, klass.duration, klass.classType, klass.location, klass.locationLat, klass.locationLong, klass.price, klass.classCompleted]
+        (student_id, teacher_id, date, start_time, duration, class_type, location, location_lat, location_long, price, class_completed, message)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+    const params = [klass.studentId, klass.teacherId, klass.date, klass.startTime, klass.duration, klass.classType, klass.location, klass.locationLat, klass.locationLong, klass.price, klass.classCompleted, klass.message]
     const result = await pool.query(query, params)
     return result
   }
@@ -559,11 +592,12 @@ class Dao {
         `UPDATE class SET
           location = ?,
           location_lat = ?,
-          location_long = ?
+          location_long = ?,
+          message = ?
         WHERE id = ?`
 
     console.log(`query: ${query}`)
-    const params = [klass.location, klass.locationLat, klass.locationLong, klass.id]
+    const params = [klass.location, klass.locationLat, klass.locationLong, klass.message, klass.id]
     const result = await pool.query(query, params)
 
     return result

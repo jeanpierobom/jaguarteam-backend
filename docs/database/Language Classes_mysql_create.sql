@@ -30,6 +30,7 @@ CREATE TABLE `class` (
 	`rating_to_teacher` FLOAT,
 	`review_to_teacher` TEXT,
 	`review_to_student` TEXT,
+	`message` VARCHAR(255),
 	PRIMARY KEY (`id`)
 );
 

@@ -25,7 +25,8 @@ export async function main(event, context, callback) {
     location: data.location,
     locationLat: data.locationLat,
     locationLong: data.locationLong,
-    price: data.price
+    price: data.price,
+    message: data.message
   }
 
   // Create the validation schema
@@ -39,7 +40,8 @@ export async function main(event, context, callback) {
     location: Joi.string().max(255),
     locationLat: Joi.string().max(30),
     locationLong: Joi.string().max(30),
-    price: Joi.number()
+    price: Joi.number(),
+    message: Joi.string().max(100)
   });
 
   // Validate

@@ -2,19 +2,11 @@ import { success, failure } from "./libs/response-lib";
 const dao = require('./dao/dao')
 
 export async function main(event, context) {
-	console.log('Executing listClass')
+	console.log('Executing listLanguageProtected')
 
 		try {
-			// Obtain parameters
-			let studentId, teacherId 
-			const data = event.queryStringParameters
-			if (data) {
-				studentId = data.studentId
-				teacherId = data.teacherId
-			}
-
-			// Retrieves a list of classes
-			const results = await dao.listClass(studentId, teacherId)
+			// Retrieves a list of language
+			const results = await dao.listLanguage()
 	
 			// Return status code 200
 			console.log(`results: ${JSON.stringify(results)}`)

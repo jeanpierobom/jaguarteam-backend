@@ -20,29 +20,24 @@ export async function main(event, context, callback) {
     password: data.password,
     userType: data.userType,
     name: data.name,
-    cityId: data.cityId,
-    birthDate: data.birthDate,
-    bio: data.bio
+    birthDate: data.birthDate
   }
 
-  // // Create the validation schema
-  // const schema = Joi.object().keys({
-  //   email: Joi.string().email({ minDomainSegments: 2 }).required(),
-  //   password: Joi.string().min(3).max(255).required(),
-  //   userType: Joi.string().min(1).max(1),
-  //   name: Joi.string().min(3).max(255).required(),
-  //   cityId: Joi.number().integer().min(1),
-  //   birthDate: Joi.date().iso(),
-  //   bio: Joi.string(),
-  //   motherCountryId: Joi.number().integer().min(1)
-  // });
+  // Create the validation schema
+  const schema = Joi.object().keys({
+    email: Joi.string().email({ minDomainSegments: 2 }).required(),
+    password: Joi.string().min(3).max(255).required(),
+    userType: Joi.string().min(1).max(1).required(),
+    birthDate: Joi.date().iso(),
+    name: Joi.string().min(3).max(255).required()
+  });
 
   // // Validate
-  // const validationResult = Joi.validate(item, schema);
-  // console.log(`validationResult: ${JSON.stringify(validationResult)}`)
-  // if (validationResult && validationResult.error) {
-  //   return failure({ status: false, message: validationResult.error.details })
-  // }
+  const validationResult = Joi.validate(item, schema);
+  console.log(`validationResult: ${JSON.stringify(validationResult)}`)
+  if (validationResult && validationResult.error) {
+    return failure({ status: false, message: validationResult.error.details })
+  }
 
   try {
     // Saves the object
