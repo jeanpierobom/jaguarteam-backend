@@ -38,7 +38,7 @@ export async function main(event, context, callback) {
     //const token = jwt.sign({user}, config.oauthSecret, { expiresIn: config.jwtExpirationTime })
     const token = jwt.sign({user}, config.oauthSecret)
     console.log(`token: ${token}`)
-    return success({ token: token })
+    return success({ id: user.id, token: token })
 
   } catch(error) {
 

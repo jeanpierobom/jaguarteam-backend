@@ -19,7 +19,9 @@ export async function main(event, context) {
 
 		if (results) {
       for (let r of results) {
-        r.classTypes = await dao.getTeacherClassTypes(r.id)
+				r.classTypes = await dao.getTeacherClassTypes(r.id)
+				r.ratings = await dao.getTeacherRatings(r.id)
+				r.availability = await dao.getTeacherAvailability(r.id)
       }
     }
 

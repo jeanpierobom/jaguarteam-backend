@@ -10,12 +10,17 @@ import config from './util/config'
 // Returns a boolean whether or not a user is allowed to call a particular method
 // A user with scopes: ['pangolins'] can
 // call 'arn:aws:execute-api:ap-southeast-1::random-api-id/dev/GET/pangolins'
-const authorizeUser = (userScopes, methodArn) => {
+const authorizeUser = (user, userScopes, methodArn) => {
   // const hasValidScope = _.some(userScopes, scope => _.endsWith(methodArn, scope));
   // return hasValidScope;
-  
   // There are no different scopes
-  return true;
+
+  // Return true if there is a user
+  if (user) {
+    return true;
+  } else {
+    return false;
+  }
 };
 
 /**
@@ -43,7 +48,7 @@ module.exports.handler = (event, context, callback) => {
     console.log(`user: ${JSON.stringify(user)}`)
     
     // Checks if the user's scopes allow her to call the current function
-    const isAllowed = authorizeUser(user.scopes, event.methodArn);
+    const isAllowed = authorizeUser(user, user.scopes, event.methodArn);
 
     const effect = isAllowed ? 'Allow' : 'Deny';
     const userId = user.email;

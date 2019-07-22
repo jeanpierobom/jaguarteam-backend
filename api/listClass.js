@@ -6,15 +6,17 @@ export async function main(event, context) {
 
 		try {
 			// Obtain parameters
-			let studentId, teacherId 
+			let studentId, teacherId, upcoming, past
 			const data = event.queryStringParameters
 			if (data) {
 				studentId = data.studentId
 				teacherId = data.teacherId
+				upcoming = data.upcoming
+				past = data.past
 			}
 
 			// Retrieves a list of classes
-			const results = await dao.listClass(studentId, teacherId)
+			const results = await dao.listClass(studentId, teacherId, upcoming, past)
 	
 			// Return status code 200
 			console.log(`results: ${JSON.stringify(results)}`)

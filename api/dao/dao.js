@@ -44,7 +44,7 @@ class Dao {
   /**
    * Retrieves a list of class
    */
-  async listClass(studentId, teacherId) {
+  async listClass(studentId, teacherId, upcoming, past) {
     // Define query
     let query = `
     SELECT
@@ -86,10 +86,19 @@ class Dao {
     // Filter by teacher
 		if (teacherId) {
 			query += ` AND teacher_id = ${teacherId}`
-		}
+    }
+    
+    // Only upcoming classes
+    if (upcoming) {
+			query += ` AND DATE(class.date) >= DATE(DATE_ADD(now(), INTERVAL -7 HOUR))`
+    } else if (past) {
+			query += ` AND DATE(class.date) < DATE(DATE_ADD(now(), INTERVAL -7 HOUR))`
+    }
 
     query += ` ORDER BY class.date DESC, studentName, teacherName`
     
+    //date -s "14 JUL 2019 6:18:00 PM"
+
     // Executes the query and return results
     const result = await pool.query(query)
     return result
