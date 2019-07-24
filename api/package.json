@@ -29,6 +29,7 @@
   "dependencies": {
     "@hapi/joi": "^15.0.3",
     "babel-runtime": "^6.26.0",
+    "google-auth-library": "^4.2.5",
     "https": "^1.0.0",
     "jsonwebtoken": "^8.5.1",
     "promise-mysql": "^3.3.2",
