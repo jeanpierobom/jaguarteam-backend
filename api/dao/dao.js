@@ -95,7 +95,7 @@ class Dao {
 			query += ` AND DATE(class.date) < DATE(DATE_ADD(now(), INTERVAL -7 HOUR))`
     }
 
-    query += ` ORDER BY class.date DESC, studentName, teacherName`
+    query += ` ORDER BY class.date DESC, class.start_time DESC, studentName, teacherName`
     
     //date -s "14 JUL 2019 6:18:00 PM"
 

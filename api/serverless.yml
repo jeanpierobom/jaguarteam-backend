@@ -48,9 +48,6 @@ functions:
   customAuthorizer:
     handler: customAuthorizer.handler
 
-  customAuthorizer2:
-    handler: customAuthorizer2.handler
-
   # Tag: Auth
   login:
     handler: login.main
@@ -59,7 +56,7 @@ functions:
           path: login
           method: post
           cors: true
-          # authorizer: aws_iam
+          authorizer: customAuthorizer
 
   # Tag: City
   listCity:
@@ -69,7 +66,7 @@ functions:
           path: city
           method: get
           cors: true
-          #authorizer: aws_iam
+          authorizer: customAuthorizer
 
   # Tag: Class Type
   listClassType:
@@ -79,7 +76,7 @@ functions:
           path: classType
           method: get
           cors: true
-          #authorizer: aws_iam
+          authorizer: customAuthorizer
 
   # Tag: Country
   listCountry:
@@ -89,7 +86,7 @@ functions:
           path: country
           method: get
           cors: true
-          #authorizer: aws_iam
+          authorizer: customAuthorizer
 
   # Tag: Language
   listLanguage:
@@ -99,7 +96,7 @@ functions:
           path: language
           method: get
           cors: true
-          #authorizer: aws_iam
+          authorizer: customAuthorizer
   listLanguageProtected:
     handler: listLanguageProtected.main
     events:
@@ -117,7 +114,7 @@ functions:
           path: student/{id}/uploadImage
           method: post
           cors: true
-          # authorizer: aws_iam
+          authorizer: customAuthorizer
   createStudent:
     handler: createStudent.main
     events:
@@ -125,7 +122,7 @@ functions:
           path: student
           method: post
           cors: true
-          # authorizer: aws_iam
+          authorizer: customAuthorizer
   getStudentById:
     handler: getStudentById.main
     events:
@@ -133,7 +130,7 @@ functions:
           path: student/{id}
           method: get
           cors: true
-          #authorizer: aws_iam
+          authorizer: customAuthorizer
   listStudent:
     handler: listStudent.main
     events:
@@ -141,7 +138,7 @@ functions:
           path: student
           method: get
           cors: true
-          #authorizer: aws_iam
+          authorizer: customAuthorizer
           request:
             parameters:
               querystrings:
@@ -153,7 +150,7 @@ functions:
           path: student
           method: put
           cors: true
-          # authorizer: aws_iam
+          authorizer: customAuthorizer
 
   # Tag: Teacher
   createTeacher:
@@ -163,7 +160,7 @@ functions:
           path: teacher
           method: post
           cors: true
-          # authorizer: aws_iam
+          authorizer: customAuthorizer
   getTeacherById:
     handler: getTeacherById.main
     events:
@@ -171,7 +168,7 @@ functions:
           path: teacher/{id}
           method: get
           cors: true
-          #authorizer: aws_iam  
+          authorizer: customAuthorizer
   updateTeacher:
     handler: updateTeacher.main
     events:
@@ -179,7 +176,7 @@ functions:
           path: teacher
           method: put
           cors: true
-          # authorizer: aws_iam
+          authorizer: customAuthorizer
   # Defines an HTTP API endpoint that calls the main function in create.js
   # - path: url path is /class
   # - method: POST request
@@ -196,7 +193,7 @@ functions:
           path: teacher
           method: get
           cors: true
-          #authorizer: aws_iam
+          authorizer: customAuthorizer
           request:
             parameters:
               querystrings:
@@ -210,7 +207,7 @@ functions:
           path: class
           method: post
           cors: true
-          # authorizer: aws_iam
+          authorizer: customAuthorizer
   getClassById:
     handler: getClassById.main
     events:
@@ -218,7 +215,7 @@ functions:
           path: class/{id}
           method: get
           cors: true
-          #authorizer: aws_iam
+          authorizer: customAuthorizer
   listClass:
     handler: listClass.main
     events:
@@ -226,7 +223,7 @@ functions:
           path: class
           method: get
           cors: true
-          #authorizer: aws_iam
+          authorizer: customAuthorizer
   updateClass:
     handler: updateClass.main
     events:
@@ -234,7 +231,7 @@ functions:
           path: class
           method: put
           cors: true
-          # authorizer: aws_iam
+          authorizer: customAuthorizer
 
   # Tag: User
   createUser:
@@ -244,7 +241,7 @@ functions:
           path: user
           method: post
           cors: true
-          # authorizer: aws_iam
+          authorizer: customAuthorizer
   getUserById:
     handler: getUserById.main
     events:
@@ -252,7 +249,7 @@ functions:
           path: user/{id}
           method: get
           cors: true
-          #authorizer: aws_iam 
+          authorizer: customAuthorizer
   updateUser:
     handler: updateUser.main
     events:
@@ -260,7 +257,7 @@ functions:
           path: user
           method: put
           cors: true
-          # authorizer: aws_iam
+          authorizer: customAuthorizer
 
 # Create our resources with separate CloudFormation templates
 resources:
